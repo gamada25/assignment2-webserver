@@ -25,8 +25,9 @@ def webServer(port=13331):
                 outputdata = f.read()  # Read the file content
 
             # Send HTTP response headers
-            header = b"HTTP/1.1 200 OK\r\n"
-            header += b"Content-Type: text/html; charset=UTF-8\r\n"
+            header = b"HTTP/1.1 200 OK\r\n"  # Status line
+            header += b"Content-Type: text/html; charset=UTF-8\r\n"  # Content-Type header
+            header += b"Content-Length: " + str(len(outputdata)).encode() + b"\r\n"  # Content-Length header
             header += b"\r\n"  # End of headers
             
             # Send the response headers and file content to the client
@@ -34,10 +35,11 @@ def webServer(port=13331):
 
         except IOError:
             # Send response message for invalid request due to the file not being found (404)
-            error_header = b"HTTP/1.1 404 Not Found\r\n"
-            error_header += b"Content-Type: text/html; charset=UTF-8\r\n"
-            error_header += b"\r\n"
             error_message = b"<html><body><h1>404 Not Found</h1></body></html>"
+            error_header = b"HTTP/1.1 404 Not Found\r\n"  # Status line
+            error_header += b"Content-Type: text/html; charset=UTF-8\r\n"  # Content-Type header
+            error_header += b"Content-Length: " + str(len(error_message)).encode() + b"\r\n"  # Content-Length header
+            error_header += b"\r\n"  # End of headers
             
             connectionSocket.send(error_header + error_message)
 
