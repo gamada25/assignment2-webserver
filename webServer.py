@@ -24,10 +24,12 @@ def webServer(port=13331):
             with open(filename[1:], 'rb') as f:  # Open the file in binary mode
                 outputdata = f.read()  # Read the file content
 
-            # Send HTTP response headers
+            # Prepare HTTP response headers
             header = b"HTTP/1.1 200 OK\r\n"  # Status line
             header += b"Content-Type: text/html; charset=UTF-8\r\n"  # Content-Type header
             header += b"Content-Length: " + str(len(outputdata)).encode() + b"\r\n"  # Content-Length header
+            header += b"Server: SimplePythonServer\r\n"  # Server header
+            header += b"Connection: close\r\n"  # Connection header
             header += b"\r\n"  # End of headers
             
             # Send the response headers and file content to the client
@@ -39,6 +41,8 @@ def webServer(port=13331):
             error_header = b"HTTP/1.1 404 Not Found\r\n"  # Status line
             error_header += b"Content-Type: text/html; charset=UTF-8\r\n"  # Content-Type header
             error_header += b"Content-Length: " + str(len(error_message)).encode() + b"\r\n"  # Content-Length header
+            error_header += b"Server: SimplePythonServer\r\n"  # Server header
+            error_header += b"Connection: close\r\n"  # Connection header
             error_header += b"\r\n"  # End of headers
             
             connectionSocket.send(error_header + error_message)
@@ -50,6 +54,5 @@ def webServer(port=13331):
     # Uncomment the below lines if you want to close the server socket on exit
     # serverSocket.close()
     # sys.exit()  # Terminate the program after sending the corresponding data
-
 if __name__ == "__main__":
     webServer(13331)
